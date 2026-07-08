@@ -72,28 +72,32 @@ for county, lat, long in locs:
 with open("all_counties_weather_data.json", "w") as file:
     json.dump(all_counties, file, indent=4)
 
-weather_df = weather_df[
-    [
-        "county",
-        "time",
-        "latitude",
-        "longitude",
-        "temperature_2m_mean",
-        "et0_fao_evapotranspiration_sum",
-        "soil_moisture_0_to_100cm_mean",
-        "soil_temperature_0_to_100cm_mean",
-        "relative_humidity_2m_mean",
-        "vapour_pressure_deficit_max",
-        "wind_speed_10m_mean",
-        "cloud_cover_mean",
-        "precipitation_sum"
-    ]
+weather_columns = [
+    "temperature_2m_mean",
+    "et0_fao_evapotranspiration_sum",
+    "soil_moisture_0_to_100cm_mean",
+    "soil_temperature_0_to_100cm_mean",
+    "relative_humidity_2m_mean",
+    "vapour_pressure_deficit_max",
+    "wind_speed_10m_mean",
+    "cloud_cover_mean",
+    "precipitation_sum"
 ]
+
+weather_df = weather_df[["county", "time", "latitude", "longitude"] + weather_columns]
 
 print(weather_df)
 print(weather_df.isnull().sum())
 print(weather_df.dtypes)
+
 print(weather_df.describe())
+print("-----------------------------")
+for col in weather_columns:
+    print(f"\n{col}")
+    print(f"Min: {weather_df[col].min()}")
+    print(f"Max: {weather_df[col].max()}")
+print("-----------------------------")
+
 print(weather_df.duplicated().sum())
 
 # query 1: Which county has the highest average wind speed in the entire year?
